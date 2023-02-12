@@ -1,0 +1,15 @@
+[tool.poetry]
+version = "0.0.0"
+name = "learning-algorithms"
+description = "learning-algorithms"
+authors = ["Adrian Macal <adma@amacal.pl>"]
+
+[tool.poetry.scripts]
+execute = "learning_algorithms.main:execute"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+
+[build-system]
+requires = ["poetry"]
+build-backend = "poetry.masonry.api"
