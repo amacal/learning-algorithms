@@ -15,7 +15,7 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "bungcip.better-toml"
-            ],
+            ]
         },
         "settings": {
             "files.trimTrailingWhitespace": true,
@@ -28,7 +28,8 @@
             "pythonTestExplorer.testFramework": "pytest",
             "python.languageServer": "Pylance",
             "python.linting.enabled": true,
-            "python.linting.flake8Enabled": true,
+            "python.linting.mypyEnabled": true,
+            "python.linting.flake8Enabled": false,
             "python.linting.pylintEnabled": false,
             "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
             "python.formatting.blackArgs": [
@@ -42,5 +43,5 @@
             ],
             "python.venvPath": "/home/vscode/.cache/pypoetry/virtualenvs"
         }
-        }
+    }
 }
