@@ -80,3 +80,19 @@ class WebNetworkTrafficGenerator:
                 destination=destination if is_uploading else source,
                 size=download_factor * random.randint(50, 150),
             )
+
+
+class MixedNetworkTrafficGenerator:
+    def __init__(self, servers: Network, clients: Network):
+        self._web = WebNetworkTrafficGenerator(servers, clients)
+        self._uniformed = UniformedNetworkTrafficGenerator(clients)
+
+    def stream(self, count: int) -> Iterator[NetworkPacket]:
+        web = self._web.stream(count)
+        uniformed = self._uniformed.stream(count)
+
+        for _ in range(count):
+            if random.randint(1, 2) == 1:
+                yield web.__next__()
+            else:
+                yield uniformed.__next__()

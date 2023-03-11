@@ -34,10 +34,10 @@ def combine_benchmarks(benchmarks: List[pd.DataFrame]) -> pd.DataFrame:
 
 @click.command(context_settings=dict(max_content_width=120))
 @click.argument("path", type=click.STRING)
+@click.argument("benchmark", type=click.Choice(["web-network", "mixed-network"]))
 @click.argument("algorithm", type=click.Choice(["hash-map", "count-sketch", "count-min-sketch"]))
-@click.argument("benchmark", type=click.Choice(["web-network"]))
 @click.argument("target", type=click.Choice(["servers", "clients", "others"]))
-def analyze(path: str, algorithm: str, benchmark: str, target: str) -> None:
+def analyze(path: str, benchmark: str, algorithm: str, target: str) -> None:
     pd.set_option("display.max_rows", None)
 
     df = combine_benchmarks([

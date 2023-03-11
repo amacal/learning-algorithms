@@ -4,11 +4,13 @@ import asyncio
 from typing import Any
 from typing import List
 from typing import Dict
+from typing import Optional
 
 from concurrent.futures import ProcessPoolExecutor
 
 from learning_algorithms.types import CountEstimator
 from learning_algorithms.benchmarks import WebNetworkBenchmark
+from learning_algorithms.benchmarks import MixedNetworkBenchmark
 from learning_algorithms.count_min_sketch import CountMinSketch
 from learning_algorithms.count_sketch import CountSketch
 from learning_algorithms.hash_map import HashMap
@@ -77,12 +79,17 @@ def execute_count_min_sketch(benchmark: Benchmark, depth: int, width: int) -> No
 
 
 @click.command(context_settings=dict(max_content_width=120))
+@click.argument("benchmark", type=click.Choice(["web-network", "mixed-network"]))
 @click.argument("algorithm", type=click.Choice(["hash-map", "count-sketch", "count-min-sketch"]))
 @click.option("-d", "--depths", type=int, multiple=True)
 @click.option("-w", "--widths", type=int, multiple=True)
-def execute(algorithm: str, depths: List[int], widths: List[int]) -> None:
-    web_benchmark = WebNetworkBenchmark(
-        threshold=50_000_000, iterations=10_000_000)
+def execute(benchmark: str, algorithm: str, depths: List[int], widths: List[int]) -> None:
+    implementation: Optional[Benchmark] = None
+
+    if benchmark == "web-network":
+        implementation = WebNetworkBenchmark(threshold=50_000_000, iterations=10_000_000)
+    elif benchmark == "mixed-network":
+        implementation = MixedNetworkBenchmark(threshold=50_000_000, iterations=10_000_000)
 
     if algorithm == "count-min-sketch":
         executor = execute_count_min_sketch
@@ -102,12 +109,12 @@ def execute(algorithm: str, depths: List[int], widths: List[int]) -> None:
 
     if executor:
         items = [
-            (executor, web_benchmark, depth, width)
+            (executor, implementation, depth, width)
             for depth in depths
             for width in widths
         ]
     else:
-        items = [(execute_hash_map, web_benchmark)]
+        items = [(execute_hash_map, implementation)]
 
     async def trigger() -> None:
         with ProcessPoolExecutor(max_workers=6) as executor:
