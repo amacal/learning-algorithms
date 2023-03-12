@@ -1,6 +1,7 @@
 import keras
 import keras.layers
 import keras.models
+import keras.callbacks
 
 import numpy as np
 

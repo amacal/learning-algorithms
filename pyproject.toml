@@ -8,12 +8,14 @@ authors = ["Adrian Macal <adma@amacal.pl>"]
 model = "learning_algorithms.model:main"
 train = "learning_algorithms.train:main"
 validate = "learning_algorithms.validate:main"
+download = "learning_algorithms.unsplash:download"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
 keras = "2.11.0"
 tensorflow = "2.11.0"
 matplotlib = "3.7.1"
+requests = "2.28.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "1.1.1"
