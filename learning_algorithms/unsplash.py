@@ -33,6 +33,17 @@ class ImageRepository:
     def contains(self, id: str) -> bool:
         return id in self._ids
 
+    def topics(self) -> List[str]:
+        return [
+            os.path.basename(name)
+            for name in os.listdir(self._path)
+        ]
+
+    def stream(self, topic: str) -> Iterator[Tuple[str, bytes]]:
+        for name in os.listdir(os.path.join(self._path, topic)):
+            with open(os.path.join(self._path, topic, name), "rb") as file:
+                yield os.path.splitext(name)[0], file.read()
+
     def append(self, topic: str, id: str, data: bytes) -> None:
         if not os.path.exists(os.path.join(self._path, topic)):
             os.mkdir(os.path.join(self._path, topic))
