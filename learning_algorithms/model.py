@@ -4,12 +4,13 @@ import keras.models
 import keras.callbacks
 
 import numpy as np
+import tensorflow as tf
 
 from typing import Tuple
 
 
 class Autoencoder:
-    def __init__(self, model: keras.Model) -> None:
+    def __init__(self, model: keras.Model):
         self._model = model
 
     @staticmethod
@@ -17,12 +18,12 @@ class Autoencoder:
         return Autoencoder(keras.models.load_model(path))
 
     @staticmethod
-    def empty(image_shape: Tuple[int, int], encoding_dimension: int) -> "Autoencoder":
-        input_layer = keras.Input(shape=(image_shape[0] * image_shape[1], ), name="image")
-        encoded_layer = keras.layers.Dense(encoding_dimension, activation="relu", name="encoded")(input_layer)
-        decoded_layer = keras.layers.Dense(image_shape[0] * image_shape[1], activation="sigmoid", name="decoded")(encoded_layer)
+    def empty(image_shape: Tuple[int, int], dimensionality: int) -> "Autoencoder":
+        inputs: tf.Tensor = keras.Input(shape=(np.product(image_shape), ), name="image")
+        embeddings: tf.Tensor = keras.layers.Dense(dimensionality, activation="relu", name="encoded")(inputs)
+        outputs: tf.Tensor = keras.layers.Dense(np.product(image_shape), activation="sigmoid", name="decoded")(embeddings)
 
-        model = keras.Model(input_layer, decoded_layer, name="autoencoder")
+        model = keras.Model(inputs, outputs, name="autoencoder")
         model.compile(optimizer="adam", loss="binary_crossentropy")
 
         return Autoencoder(model)
@@ -30,13 +31,13 @@ class Autoencoder:
     def summary(self) -> None:
         self._model.summary()
 
-    def train(self, train_images: np.ndarray, test_images: np.ndarray, *, epochs: int = 50, batch_size: int = 256) -> None:
+    def train(self, train: tf.data.Dataset, test: tf.data.Dataset, *, epochs: int = 50, batch_size: int = 256) -> None:
         self._model.fit(
-            train_images, train_images,
+            train,
             epochs=epochs,
             batch_size=batch_size,
             shuffle=True,
-            validation_data=(test_images, test_images)
+            validation_data=test
         )
 
     def predict(self, images: np.ndarray) -> np.ndarray:

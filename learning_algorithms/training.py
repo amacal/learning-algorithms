@@ -26,9 +26,9 @@ def train(datasource: str, resolution: str, epochs: int, batch_size: int, dimens
         registry = ModelRegistry("./data/registry")
 
         if datasource == "mnist":
-            dataset = load_preprocessed_minist_dataset()
+            dataset = load_preprocessed_minist_dataset(batch_size)
         elif datasource == "unsplash":
-            dataset = load_preprocessed_unsplash_dataset(store, shape)
+            dataset = load_preprocessed_unsplash_dataset(store, shape, batch_size)
 
         autoencoder.train(*dataset, epochs=epochs, batch_size=batch_size)
         autoencoder.save(registry.resolve("h5", {

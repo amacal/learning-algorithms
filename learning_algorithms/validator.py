@@ -50,11 +50,11 @@ def vizualize(shape: Tuple[int, int], models: List[Tuple[str, Dict[str, str]]], 
 
 def pick_samples(datasource: str, shape: Tuple[int, int], size: int) -> np.ndarray:
     if datasource == "mnist":
-        _, images = load_preprocessed_minist_dataset()
+        _, images = load_preprocessed_minist_dataset(size)
     elif datasource == "unsplash":
-        _, images = load_preprocessed_unsplash_dataset(FeatureStore("./data/features"), shape)
+        _, images = load_preprocessed_unsplash_dataset(FeatureStore("./data/features"), shape, size)
 
-    return images[np.random.choice(images.shape[0], size=size, replace=False)]
+    return np.array(list(images.map(lambda x, _: x).shuffle(buffer_size=1024).take(1).as_numpy_iterator())).reshape((size, np.product(shape)))
 
 
 @click.command()

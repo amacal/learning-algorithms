@@ -66,15 +66,15 @@ class FeatureStore:
         np.save(os.path.join(self._path, resolution, topic + ".npy"), features)
         return len(features)
 
-    def load(self, shape: Tuple[int, int]) -> np.ndarray:
+    def load(self, shape: Tuple[int, int]) -> Iterator[np.ndarray]:
         resolution = shape_to_resolution(shape)
 
-        features = [
+        features: Iterator[np.ndarray] = (
             np.load(os.path.join(self._path, resolution, file))
             for file in os.listdir(os.path.join(self._path, resolution))
-        ]
+        )
 
-        return np.concatenate(features, axis=0)
+        return features
 
 
 @click.command()
