@@ -59,7 +59,12 @@ class UnsplashService:
         pass
 
     def topics(self) -> List[str]:
-        return ["wallpapers", "3d-renders", "travel", "nature", "street-photography", "experimental", "textures-patterns", "animals", "architecture-interior", "fashion-beauty", "film", "food-drink", "people", "spirituality", "business-work", "athletics", "health", "current-events", "arts-culture"]
+        return [
+            "wallpapers", "3d-renders", "travel", "nature", "street-photography",
+            "experimental", "textures-patterns", "animals", "architecture-interior",
+            "fashion-beauty", "film", "food-drink", "people", "spirituality", "business-work",
+            "athletics", "health", "current-events", "arts-culture"
+        ]
 
     def stream(self, topics: List[str], pages: Tuple[int, int], per_page: int = 20) -> Iterator[Tuple[str, str, str]]:
         visited: Set[str] = set()
